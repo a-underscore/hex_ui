@@ -1,14 +1,21 @@
+pub mod button;
+pub mod callback;
+
+pub use callback::Callback;
+
 use crate::UiManager;
 use hex::{
     cid,
-    hecs::{component_manager::Component, Ev, World},
+    hecs::{component_manager::Component, Ev},
 };
-use std::rc::Rc;
 
-#[derive(Clone)]
-pub struct Ui(pub Rc<dyn Fn(usize, &mut Ev, &mut World, &mut UiManager)>);
+pub trait Ui {
+    fn update(&mut self, _: &mut Ev, _: &mut UiManager) -> Callback {
+        Ok(None)
+    }
+}
 
-impl Component for Ui {
+impl Component for Box<dyn Ui> {
     fn id() -> usize {
         cid!()
     }
