@@ -32,7 +32,7 @@ impl Ui for Button {
                 flow: _,
             }) = event
             {
-                if let Some(p) = world
+                let p = world
                     .em
                     .entities
                     .keys()
@@ -49,13 +49,12 @@ impl Ui for Button {
                                 .and_then(|t| t.active.then_some(t.clone()))?,
                         ))
                     })
-                    .and_then(|_| /* TODO */ todo!())
+                    .and_then(|_| /* TODO */ todo!());
+
+                if let Some(Callback(ref mut mp)) =
+                    world.cm.get_mut::<Callback<Vector2<f32>>>(e, &world.em)
                 {
-                    if let Some(Callback(events)) =
-                        world.cm.get_mut::<Callback<Vector2<f32>>>(e, &world.em)
-                    {
-                        events.push((e, (p)));
-                    }
+                    *mp = p;
                 }
             }
             Ok(())
