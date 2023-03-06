@@ -3,13 +3,21 @@ use hex::{
     anyhow,
     cgmath::Vector2,
     components::{Camera, Transform},
-    hecs::{ev::Ev, system_manager::System, world::World},
+    glium::glutin::{
+        dpi::{PhysicalPosition, PhysicalSize},
+        event::{Event, WindowEvent},
+    },
+    hecs::{ev::Control, system_manager::System, world::World, Ev},
 };
 
-pub struct UiManager;
+#[derive(Default)]
+pub struct UiManager {
+    pub window_dims: (u32, u32),
+    pub mouse_pos: (f32, f32),
+}
 
 impl UiManager {
-    fn screen_to_world_pos(
+    pub fn screen_to_world_pos(
         camera: &Camera,
         transform: &Transform,
         screen_pos: &ScreenPos,
@@ -24,6 +32,37 @@ impl UiManager {
 
 impl System<'_> for UiManager {
     fn update(&mut self, ev: &mut Ev, world: &mut World) -> anyhow::Result<()> {
+        match ev {
+            Ev::Event(Control {
+                event:
+                    Event::WindowEvent {
+                        event:
+                            WindowEvent::Resized(PhysicalSize {
+                                width: x,
+                                height: y,
+                            }),
+                        window_id: _,
+                    },
+                flow: _,
+            }) => {
+                self.window_dims = (*x, *y);
+            }
+            Ev::Event(Control {
+                event:
+                    Event::WindowEvent {
+                        event:
+                            WindowEvent::CursorMoved {
+                                position: PhysicalPosition { x, y },
+                                ..
+                            },
+                        window_id: _,
+                    },
+                flow: _,
+            }) => {
+                self.mouse_pos = (*x as f32, *y as f32);
+            }
+            _ => {}
+        }
         if let Some((c, ct)) = world.em.entities.keys().cloned().find_map(|e| {
             Some((
                 world
@@ -57,13 +96,13 @@ impl System<'_> for UiManager {
                             world
                                 .cm
                                 .get_mut::<Box<dyn Ui>>(e, &world.em)
-                                .map(|u| u.update(ev, self).map(|c| (e, c)))
+                                .map(|u| u.update(e, ev, self).map(|c| (e, c)))
                         })
                 })
                 .collect::<anyhow::Result<Vec<_>>>()?
             {
                 if let Some(mut callback) = c {
-                    callback(e, ev, world);
+                    callback(e, ev, world)?;
                 }
             }
         }

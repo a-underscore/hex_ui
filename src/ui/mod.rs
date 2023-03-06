@@ -1,16 +1,20 @@
 pub mod button;
-pub mod callback;
 
-pub use callback::Callback;
+pub use crate::callback::Callback;
 
 use crate::UiManager;
 use hex::{
-    cid,
+    anyhow, cid,
     hecs::{component_manager::Component, Ev},
 };
 
 pub trait Ui {
-    fn update(&mut self, _: &mut Ev, _: &mut UiManager) -> Callback {
+    fn update(
+        &mut self,
+        _: usize,
+        _: &mut Ev,
+        _: &mut UiManager,
+    ) -> anyhow::Result<Option<Callback>> {
         Ok(None)
     }
 }
