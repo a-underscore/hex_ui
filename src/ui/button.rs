@@ -1,5 +1,5 @@
-use super::Ui;
-use crate::{Callback, UiManager};
+use super::{Callback, Ui, Update};
+use crate::UiManager;
 use hex::{
     anyhow,
     cgmath::Vector2,
@@ -11,21 +11,14 @@ use hex::{
 pub struct Button {
     pub max: Vector2<f32>,
     pub min: Vector2<f32>,
-    pub events: Vec<usize>,
 }
 
-impl Ui for Button {
-    fn update(
-        &mut self,
-        e: usize,
-        event: &mut Ev,
-        manager: &mut UiManager,
-    ) -> anyhow::Result<Option<Callback>> {
-        let _mouse_pos = manager.mouse_pos;
-        let _window_dims = manager.window_dims;
+impl Button {}
 
-        Ok(match event {
-            Ev::Event(Control {
+impl Ui for Button {
+    fn ui(&mut self, _manager: &mut UiManager) -> anyhow::Result<Update> {
+        Ok(Box::new(|e, event, world| {
+            if let Ev::Event(Control {
                 event:
                     Event::WindowEvent {
                         event:
@@ -37,30 +30,35 @@ impl Ui for Button {
                         ..
                     },
                 flow: _,
-            }) => {
-                self.events.push(e);
-
-                Some(Box::new(|_e, _ev, world| {
-                    if let Some((_c, _ct)) = world.em.entities.keys().cloned().find_map(|e| {
+            }) = event
+            {
+                if let Some(p) = world
+                    .em
+                    .entities
+                    .keys()
+                    .cloned()
+                    .find_map(|e| {
                         Some((
                             world
                                 .cm
                                 .get::<Camera>(e, &world.em)
-                                .and_then(|c| c.active.then_some(c))?,
+                                .and_then(|c| c.active.then_some(c.clone()))?,
                             world
                                 .cm
                                 .get::<Transform>(e, &world.em)
-                                .and_then(|t| t.active.then_some(t))?,
+                                .and_then(|t| t.active.then_some(t.clone()))?,
                         ))
-                    }) {
-                        // TODO: find on-screen position and check if it is within the dimensions of
-                        // the bounding box
+                    })
+                    .and_then(|_| /* TODO */ todo!())
+                {
+                    if let Some(Callback(events)) =
+                        world.cm.get_mut::<Callback<Vector2<f32>>>(e, &world.em)
+                    {
+                        events.push((e, (p)));
                     }
-
-                    Ok(())
-                }))
+                }
             }
-            _ => None,
-        })
+            Ok(())
+        }))
     }
 }

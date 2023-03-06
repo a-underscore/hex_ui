@@ -77,7 +77,7 @@ impl System<'_> for UiManager {
                     .clone(),
             ))
         }) {
-            for (e, c) in world
+            for (e, mut u) in world
                 .em
                 .entities
                 .keys()
@@ -96,14 +96,12 @@ impl System<'_> for UiManager {
                             world
                                 .cm
                                 .get_mut::<Box<dyn Ui>>(e, &world.em)
-                                .map(|u| u.update(e, ev, self).map(|c| (e, c)))
+                                .map(|u| u.ui(self).map(|c| (e, c)))
                         })
                 })
                 .collect::<anyhow::Result<Vec<_>>>()?
             {
-                if let Some(mut callback) = c {
-                    callback(e, ev, world)?;
-                }
+                u(e, ev, world)?;
             }
         }
 
