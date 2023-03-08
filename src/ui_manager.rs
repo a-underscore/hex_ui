@@ -83,7 +83,13 @@ impl System<'_> for UiManager {
 
                             transform.set_position(
                                 transform.position()
-                                    + Vector2::new(s.position.x / dims.x, s.position.y / dims.y),
+                                    + (transform.matrix()
+                                        * Vector2::new(
+                                            s.position.x * dims.x,
+                                            s.position.y * dims.y,
+                                        )
+                                        .extend(1.0))
+                                    .truncate(),
                             );
 
                             world
