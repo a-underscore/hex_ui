@@ -16,20 +16,6 @@ pub struct UiManager {
     pub mouse_pos: (f32, f32),
 }
 
-impl UiManager {
-    pub fn screen_to_world_pos(
-        camera: &Camera,
-        transform: &Transform,
-        screen_pos: &ScreenPos,
-    ) -> Vector2<f32> {
-        let position = screen_pos.pos;
-        let dims = camera.dimensions();
-        let on_screen_pos = Vector2::new(position.x / dims.x, position.y / dims.y);
-
-        transform.position() + on_screen_pos
-    }
-}
-
 impl System<'_> for UiManager {
     fn update(&mut self, ev: &mut Ev, world: &mut World) -> anyhow::Result<()> {
         match ev {
@@ -91,7 +77,14 @@ impl System<'_> for UiManager {
                         .and_then(|s| {
                             let transform = world.cm.get_mut::<Transform>(e, &world.em)?;
 
-                            transform.set_position(Self::screen_to_world_pos(&c, &ct, &s));
+                            *transform = ct.clone();
+
+                            let dims = c.dimensions();
+
+                            transform.set_position(
+                                transform.position()
+                                    + Vector2::new(s.position.x / dims.x, s.position.y / dims.y),
+                            );
 
                             world
                                 .cm

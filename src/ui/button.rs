@@ -36,8 +36,8 @@ impl Ui for Button {
             }) = event
             {
                 let p = world.cm.get::<ScreenPos>(e, &world.em).and_then(|s| {
-                    let min = s.pos + min;
-                    let max = s.pos + max;
+                    let min = s.position + min;
+                    let max = s.position + max;
                     let mouse_pos = Vector2::new(
                         mouse_pos.0 / window_dims.0 as f32,
                         mouse_pos.1 / window_dims.1 as f32,

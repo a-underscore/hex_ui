@@ -2,7 +2,7 @@ use hex::{cgmath::Vector2, cid, hecs::component_manager::Component};
 
 #[derive(Clone)]
 pub struct ScreenPos {
-    pub pos: Vector2<f32>,
+    pub position: Vector2<f32>,
     pub active: bool,
 }
 
