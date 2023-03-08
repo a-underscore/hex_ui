@@ -89,6 +89,8 @@ impl System<'_> for UiManager {
                             .truncate(),
                     );
 
+                    println!("transform position: {:?}", transform.position());
+
                     Some(e)
                 })
                 .collect::<Vec<_>>()
