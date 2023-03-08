@@ -12,8 +12,8 @@ use hex::{
 
 #[derive(Default)]
 pub struct UiManager {
-    pub window_dims: (u32, u32),
-    pub mouse_pos: (f32, f32),
+    pub window_dimensions: (u32, u32),
+    pub mouse_position: (f32, f32),
 }
 
 impl System<'_> for UiManager {
@@ -31,7 +31,7 @@ impl System<'_> for UiManager {
                     },
                 flow: _,
             }) => {
-                self.window_dims = (*x, *y);
+                self.window_dimensions = (*x, *y);
             }
             Ev::Event(Control {
                 event:
@@ -45,7 +45,7 @@ impl System<'_> for UiManager {
                     },
                 flow: _,
             }) => {
-                self.mouse_pos = (*x as f32, *y as f32);
+                self.mouse_position = (*x as f32, *y as f32);
             }
             _ => {}
         }

@@ -16,8 +16,8 @@ pub struct Button {
 impl Ui for Button {
     fn ui(&mut self, manager: &mut UiManager) -> anyhow::Result<Update> {
         let dims = self.dims;
-        let window_dims = manager.window_dims;
-        let mouse_pos = manager.mouse_pos;
+        let window_dimensions = manager.window_dimensions;
+        let mouse_position = manager.mouse_position;
 
         Ok(Box::new(move |e, event, world| {
             if let Ev::Event(Control {
@@ -37,16 +37,16 @@ impl Ui for Button {
                 let p = world.cm.get::<ScreenPos>(e, &world.em).and_then(|s| {
                     let max = s.position + dims / 2.0;
                     let min = s.position - dims / 2.0;
-                    let mouse_pos = Vector2::new(
-                        mouse_pos.0 / window_dims.0 as f32,
-                        mouse_pos.1 / window_dims.1 as f32,
+                    let mouse_position = Vector2::new(
+                        mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
+                        mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0,
                     );
 
-                    (mouse_pos.x > min.x
-                        && mouse_pos.x < max.x
-                        && mouse_pos.y > min.y
-                        && mouse_pos.y < max.y)
-                        .then_some(mouse_pos)
+                    (mouse_position.x > min.x
+                        && mouse_position.x < max.x
+                        && mouse_position.y > min.y
+                        && mouse_position.y < max.y)
+                        .then_some(mouse_position)
                 });
 
                 if let Some(c) = world.cm.get_mut::<Callback<Vector2<f32>>>(e, &world.em) {
