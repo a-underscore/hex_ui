@@ -96,6 +96,7 @@ impl System<'_> for UiManager {
                             world
                                 .cm
                                 .get_mut::<Box<dyn Ui>>(e, &world.em)
+                                .and_then(|u| u.active().then_some(u))
                                 .map(|u| u.ui(self).map(|c| (e, c)))
                         })
                 })

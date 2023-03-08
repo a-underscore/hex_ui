@@ -1,10 +1,8 @@
 pub mod button;
 pub mod callback;
-pub mod ui_component;
 
 pub use button::Button;
 pub use callback::Callback;
-pub use ui_component::UiComponent;
 
 use crate::UiManager;
 use hex::{
