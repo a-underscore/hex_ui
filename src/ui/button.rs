@@ -11,6 +11,7 @@ use hex::{
 pub struct Button {
     pub max: Vector2<f32>,
     pub min: Vector2<f32>,
+    pub active: bool,
 }
 
 impl Ui for Button {
@@ -57,5 +58,9 @@ impl Ui for Button {
 
             Ok(())
         }))
+    }
+
+    fn active(&mut self) -> bool {
+        self.active
     }
 }
