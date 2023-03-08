@@ -9,15 +9,13 @@ use hex::{
 
 #[derive(Clone)]
 pub struct Button {
-    pub max: Vector2<f32>,
-    pub min: Vector2<f32>,
+    pub dims: Vector2<f32>,
     pub active: bool,
 }
 
 impl Ui for Button {
     fn ui(&mut self, manager: &mut UiManager) -> anyhow::Result<Update> {
-        let max = self.max;
-        let min = self.min;
+        let dims = self.dims;
         let window_dims = manager.window_dims;
         let mouse_pos = manager.mouse_pos;
 
@@ -37,8 +35,8 @@ impl Ui for Button {
             }) = event
             {
                 let p = world.cm.get::<ScreenPos>(e, &world.em).and_then(|s| {
-                    let min = s.position + min;
-                    let max = s.position + max;
+                    let max = s.position + dims / 2.0;
+                    let min = s.position - dims / 2.0;
                     let mouse_pos = Vector2::new(
                         mouse_pos.0 / window_dims.0 as f32,
                         mouse_pos.1 / window_dims.1 as f32,
