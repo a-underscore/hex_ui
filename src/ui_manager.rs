@@ -63,46 +63,45 @@ impl System<'_> for UiManager {
                     .clone(),
             ))
         }) {
-            for (e, mut u) in world
+            for e in world
                 .em
                 .entities
                 .keys()
                 .cloned()
                 .into_iter()
                 .filter_map(|e| {
-                    world
+                    let s = world
                         .cm
                         .get::<ScreenPos>(e, &world.em)
-                        .cloned()
-                        .and_then(|s| {
-                            let s = s.active.then_some(s)?;
-                            let transform = world.cm.get_mut::<Transform>(e, &world.em)?;
+                        .and_then(|s| s.active.then_some(s))
+                        .cloned()?;
+                    let transform = world.cm.get_mut::<Transform>(e, &world.em)?;
 
-                            *transform = ct.clone();
+                    *transform = ct.clone();
 
-                            let dims = c.dimensions();
+                    let dims = c.dimensions();
 
-                            transform.set_position(
-                                transform.position()
-                                    + (transform.matrix()
-                                        * Vector2::new(
-                                            s.position.x * dims.x,
-                                            s.position.y * dims.y,
-                                        )
-                                        .extend(1.0))
-                                    .truncate(),
-                            );
+                    transform.set_position(
+                        transform.position()
+                            + (transform.matrix()
+                                * Vector2::new(s.position.x * dims.x, s.position.y * dims.y)
+                                    .extend(1.0))
+                            .truncate(),
+                    );
 
-                            world
-                                .cm
-                                .get_mut::<Box<dyn Ui>>(e, &world.em)
-                                .and_then(|u| u.active().then_some(u))
-                                .map(|u| u.ui(self).map(|c| (e, c)))
-                        })
+                    Some(e)
                 })
-                .collect::<anyhow::Result<Vec<_>>>()?
+                .collect::<Vec<_>>()
             {
-                u(e, ev, world)?;
+                if let Some(u) = world
+                    .cm
+                    .get_mut::<Box<dyn Ui>>(e, &world.em)
+                    .and_then(|u| u.active().then_some(u))
+                    .map(|u| u.ui(self).map(|c| (e, c)))
+                {
+                    let (e, mut u) = u?;
+                    u(e, ev, world)?;
+                }
             }
         }
 
