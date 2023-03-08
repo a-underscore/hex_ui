@@ -75,6 +75,7 @@ impl System<'_> for UiManager {
                         .get::<ScreenPos>(e, &world.em)
                         .cloned()
                         .and_then(|s| {
+                            let s = s.active.then_some(s)?;
                             let transform = world.cm.get_mut::<Transform>(e, &world.em)?;
 
                             *transform = ct.clone();
