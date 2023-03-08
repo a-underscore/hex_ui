@@ -82,11 +82,10 @@ impl System<'_> for UiManager {
                     let dims = c.dimensions();
 
                     transform.set_position(
-                        transform.position()
-                            + (transform.matrix()
-                                * Vector2::new(s.position.x * dims.x, s.position.y * dims.y)
-                                    .extend(1.0))
-                            .truncate(),
+                        (transform.matrix()
+                            * Vector2::new(s.position.x * dims.x, s.position.y * dims.y)
+                                .extend(1.0))
+                        .truncate(),
                     );
 
                     Some(e)
