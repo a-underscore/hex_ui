@@ -1,8 +1,9 @@
 use super::{Callback, Ui, Update};
-use crate::{ScreenPos, UiManager};
+use crate::UiManager;
 use hex::{
     anyhow,
     cgmath::Vector2,
+    components::Transform,
     glium::glutin::event::{ElementState, Event, MouseButton, WindowEvent},
     hecs::{ev::Control, Ev},
 };
@@ -34,9 +35,9 @@ impl Ui for Button {
                 flow: _,
             }) = event
             {
-                let p = world.cm.get::<ScreenPos>(e, &world.em).and_then(|s| {
-                    let max = s.position + dimensions / 2.0;
-                    let min = s.position - dimensions / 2.0;
+                let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
+                    let max = (s.matrix() * dimensions.extend(1.0)).truncate() / 2.0;
+                    let min = (s.matrix() * -dimensions.extend(1.0)).truncate() / 2.0;
                     let mouse_position = Vector2::new(
                         mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
                         mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0,

@@ -1,7 +1,6 @@
-use crate::{ScreenPos, Ui};
+use crate::Ui;
 use hex::{
     anyhow,
-    cgmath::Vector2,
     components::{Camera, Transform},
     glium::glutin::{
         dpi::{PhysicalPosition, PhysicalSize},
@@ -49,7 +48,8 @@ impl System<'_> for UiManager {
             }
             _ => {}
         }
-        if let Some((c, ct)) = world.em.entities.keys().cloned().find_map(|e| {
+
+        if let Some((_, _)) = world.em.entities.keys().cloned().find_map(|e| {
             Some((
                 world
                     .cm
@@ -63,37 +63,7 @@ impl System<'_> for UiManager {
                     .clone(),
             ))
         }) {
-            for e in world
-                .em
-                .entities
-                .keys()
-                .cloned()
-                .filter_map(|e| {
-                    let s = world
-                        .cm
-                        .get::<ScreenPos>(e, &world.em)
-                        .and_then(|s| s.active.then_some(s))
-                        .cloned()?;
-                    let transform = world.cm.get_mut::<Transform>(e, &world.em)?;
-
-                    *transform = ct.clone();
-
-                    let dims = c.dimensions();
-
-                    transform.set_position(
-                        (transform.matrix()
-                            * Vector2::new(
-                                s.position.x * dims.x / 2.0,
-                                s.position.y * dims.y / 2.0,
-                            )
-                            .extend(1.0))
-                        .truncate(),
-                    );
-
-                    Some(e)
-                })
-                .collect::<Vec<_>>()
-            {
+            for e in world.em.entities.keys().cloned().collect::<Vec<_>>() {
                 if let Some(u) = world
                     .cm
                     .get_mut::<Box<dyn Ui>>(e, &world.em)

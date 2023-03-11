@@ -1,8 +1,10 @@
 pub mod button;
 pub mod callback;
+pub mod image;
 
 pub use button::Button;
 pub use callback::Callback;
+pub use image::Image;
 
 use crate::UiManager;
 use hex::{
