@@ -1,7 +1,6 @@
 use crate::Ui;
 use hex::{
     anyhow,
-    components::{Camera, Transform},
     glium::glutin::{
         dpi::{PhysicalPosition, PhysicalSize},
         event::{Event, WindowEvent},
@@ -49,31 +48,16 @@ impl System<'_> for UiManager {
             _ => {}
         }
 
-        if let Some((_, _)) = world.em.entities.keys().cloned().find_map(|e| {
-            Some((
-                world
-                    .cm
-                    .get::<Camera>(e, &world.em)
-                    .and_then(|c| c.active.then_some(c))?
-                    .clone(),
-                world
-                    .cm
-                    .get::<Transform>(e, &world.em)
-                    .and_then(|t| t.active.then_some(t))?
-                    .clone(),
-            ))
-        }) {
-            for e in world.em.entities.keys().cloned().collect::<Vec<_>>() {
-                if let Some(u) = world
-                    .cm
-                    .get_mut::<Box<dyn Ui>>(e, &world.em)
-                    .and_then(|u| u.active().then_some(u))
-                    .map(|u| u.ui(self).map(|c| (e, c)))
-                {
-                    let (e, mut u) = u?;
+        for e in world.em.entities.keys().cloned().collect::<Vec<_>>() {
+            if let Some(u) = world
+                .cm
+                .get_mut::<Box<dyn Ui>>(e, &world.em)
+                .and_then(|u| u.active().then_some(u))
+                .map(|u| u.ui(self).map(|c| (e, c)))
+            {
+                let (e, mut u) = u?;
 
-                    u(e, ev, world)?;
-                }
+                u(e, ev, world)?;
             }
         }
 
