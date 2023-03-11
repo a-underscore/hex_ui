@@ -38,6 +38,8 @@ impl<'a> System<'a> for UiRenderer {
                     .get::<Camera>(e, &world.em)
                     .and_then(|c| c.active.then_some(c))
             }) {
+                target.clear_depth(1.0);
+
                 let sprites = {
                     let mut sprites: Vec<_> = world
                         .em

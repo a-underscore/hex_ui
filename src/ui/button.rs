@@ -50,7 +50,7 @@ impl Ui for Button {
                         .xy();
                         let mouse_position = Vector2::new(
                             mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
-                            mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0,
+                            -(mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0),
                         );
 
                         (mouse_position.x > min.x
@@ -59,6 +59,8 @@ impl Ui for Button {
                             && mouse_position.y < max.y)
                             .then_some(mouse_position)
                     });
+
+                    println!("{:?}", p);
 
                     if let Some(c) = world.cm.get_mut::<Callback<Vector2<f32>>>(e, &world.em) {
                         c.value = p;
