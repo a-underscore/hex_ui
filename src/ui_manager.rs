@@ -68,7 +68,6 @@ impl System<'_> for UiManager {
                 .entities
                 .keys()
                 .cloned()
-                .into_iter()
                 .filter_map(|e| {
                     let s = world
                         .cm
