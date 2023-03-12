@@ -44,7 +44,7 @@ impl Ui for Button {
                     let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
                         let max = {
                             let max = c.view().proj(
-                                Vec2::truncate(s.matrix() * (dimensions / 2.0).extend(1.0)),
+                                &Vec2::trunc(&(s.matrix() * (dimensions / 2.0).extend(1.0))),
                                 1.0,
                                 1.0,
                             );
@@ -53,7 +53,7 @@ impl Ui for Button {
                         };
                         let min = {
                             let min = c.view().proj(
-                                Vec2::truncate(s.matrix() * (-dimensions / 2.0).extend(1.0)),
+                                &Vec2::trunc(&(s.matrix() * (-dimensions / 2.0).extend(1.0))),
                                 1.0,
                                 1.0,
                             );
