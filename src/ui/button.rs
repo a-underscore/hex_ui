@@ -43,22 +43,16 @@ impl Ui for Button {
                 }) {
                     let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
                         let max = {
-                            let max = c.view().proj(
-                                &Vec2::trunc(&(s.matrix() * (dimensions / 2.0).extend(1.0))),
-                                1.0,
-                                1.0,
-                            );
+                            let m = s.matrix() * (dimensions / 2.0).extend(1.0);
+                            let m = c.view() * [m[0], m[1], m[2], 1.0];
 
-                            Vec2::new(max[0], max[1])
+                            Vec2::new(m[0], m[1])
                         };
                         let min = {
-                            let min = c.view().proj(
-                                &Vec2::trunc(&(s.matrix() * (-dimensions / 2.0).extend(1.0))),
-                                1.0,
-                                1.0,
-                            );
+                            let m = s.matrix() * (-dimensions / 2.0).extend(1.0);
+                            let m = c.view() * [m[0], m[1], 1.0, 1.0];
 
-                            Vec2::new(min[0], min[1])
+                            Vec2::new(m[0], m[1])
                         };
                         let mouse_position = Vec2::new(
                             mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
