@@ -65,16 +65,12 @@ impl<'a> System<'a> for UiRenderer {
                     sprites
                 };
 
-                let camera_view: [[f32; 4]; 4] = c.view().0;
-
                 for (s, t) in sprites {
-                    let color: [f32; 4] = s.color;
-                    let transform: [[f32; 3]; 3] = t.matrix().0;
                     let uniform = uniform! {
                         z: s.z,
-                        transform: transform,
-                        camera_view: camera_view,
-                        color: color,
+                        transform: t.matrix().0,
+                        camera_view: c.view().0,
+                        color: s.color,
                         tex: Sampler(&*s.texture.buffer, s.texture.sampler_behaviour),
                     };
 
