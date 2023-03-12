@@ -2,15 +2,15 @@ use super::{Callback, Ui, Update};
 use crate::UiManager;
 use hex::{
     anyhow,
-    cgmath::Vector2,
     components::{Camera, Transform},
     glium::glutin::event::{ElementState, Event, MouseButton, WindowEvent},
     hecs::{ev::Control, Ev},
+    math::Vec2,
 };
 
 #[derive(Clone)]
 pub struct Button {
-    pub dimensions: Vector2<f32>,
+    pub dimensions: Vec2,
     pub active: bool,
 }
 
@@ -42,25 +42,37 @@ impl Ui for Button {
                         .and_then(|c| c.active.then_some(c))
                 }) {
                     let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
-                        let max = (c.view()
-                            * (s.matrix() * (dimensions / 2.0).extend(1.0)).extend(1.0))
-                        .xy();
-                        let min = (c.view()
-                            * (s.matrix() * (-dimensions / 2.0).extend(1.0)).extend(1.0))
-                        .xy();
-                        let mouse_position = Vector2::new(
+                        let max = {
+                            let max = c.view().proj(
+                                Vec2::truncate(s.matrix() * (dimensions / 2.0).extend(1.0)),
+                                1.0,
+                                1.0,
+                            );
+
+                            Vec2::new(max[0], max[1])
+                        };
+                        let min = {
+                            let min = c.view().proj(
+                                Vec2::truncate(s.matrix() * (-dimensions / 2.0).extend(1.0)),
+                                1.0,
+                                1.0,
+                            );
+
+                            Vec2::new(min[0], min[1])
+                        };
+                        let mouse_position = Vec2::new(
                             mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
                             -(mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0),
                         );
 
-                        (mouse_position.x > min.x
-                            && mouse_position.x < max.x
-                            && mouse_position.y > min.y
-                            && mouse_position.y < max.y)
-                            .then_some(mouse_position)
+                        (mouse_position.x() > min.x()
+                            && mouse_position.x() < max.x()
+                            && mouse_position.y() > min.y()
+                            && mouse_position.y() < max.y())
+                        .then_some(mouse_position)
                     });
 
-                    if let Some(c) = world.cm.get_mut::<Callback<Vector2<f32>>>(e, &world.em) {
+                    if let Some(c) = world.cm.get_mut::<Callback<Vec2>>(e, &world.em) {
                         c.value = p;
                     }
                 }
