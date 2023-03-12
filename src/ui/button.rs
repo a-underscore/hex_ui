@@ -60,8 +60,6 @@ impl Ui for Button {
                             .then_some(mouse_position)
                     });
 
-                    println!("{:?}", p);
-
                     if let Some(c) = world.cm.get_mut::<Callback<Vector2<f32>>>(e, &world.em) {
                         c.value = p;
                     }
