@@ -68,7 +68,7 @@ impl<'a> System<'a> for UiRenderer {
                 let camera_view: [[f32; 4]; 4] = c.view().0;
 
                 for (s, t) in sprites {
-                    let color: [f32; 4] = s.color.into();
+                    let color: [f32; 4] = s.color;
                     let transform: [[f32; 3]; 3] = t.matrix().0;
                     let uniform = uniform! {
                         z: s.z,
