@@ -42,18 +42,10 @@ impl Ui for Button {
                         .and_then(|c| c.active.then_some(c))
                 }) {
                     let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
-                        let max = {
-                            let m = s.matrix() * (dimensions / 2.0).extend(1.0);
-                            let m = c.view() * [m[0], m[1], m[2], 1.0];
-
-                            Vec2::new(m[0], m[1])
-                        };
-                        let min = {
-                            let m = s.matrix() * (-dimensions / 2.0).extend(1.0);
-                            let m = c.view() * [m[0], m[1], 1.0, 1.0];
-
-                            Vec2::new(m[0], m[1])
-                        };
+                        let ((max, _), _) =
+                            c.view() * (s.matrix() * ((dimensions / 2.0), 1.0), 1.0);
+                        let ((min, _), _) =
+                            c.view() * (s.matrix() * ((-dimensions / 2.0), 1.0), 1.0);
                         let mouse_position = Vec2::new(
                             mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
                             -(mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0),
