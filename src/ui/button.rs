@@ -51,8 +51,6 @@ impl Ui for Button {
                             -(mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0),
                         );
 
-                        println!("here");
-
                         (mouse_position.x() > min.x()
                             && mouse_position.x() < max.x()
                             && mouse_position.y() > min.y()
@@ -60,7 +58,11 @@ impl Ui for Button {
                         .then_some(mouse_position)
                     });
 
-                    if let Some(c) = world.cm.get_mut::<Callback<Vec2>>(e, &world.em) {
+                    if let Some(c) = world
+                        .cm
+                        .get_mut::<Callback<Vec2>>(e, &world.em)
+                        .and_then(|c| c.active.then_some(c))
+                    {
                         c.value = p;
                     }
                 }
