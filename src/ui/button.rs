@@ -27,7 +27,7 @@ impl Ui for Button {
                         event:
                             WindowEvent::MouseInput {
                                 button: MouseButton::Left,
-                                state: ElementState::Pressed,
+                                state: s,
                                 ..
                             },
                         ..
@@ -35,37 +35,41 @@ impl Ui for Button {
                 flow: _,
             }) = event
             {
-                world
-                    .em
-                    .entities
-                    .keys()
-                    .cloned()
-                    .find_map(|e| {
-                        world
-                            .cm
-                            .get::<Camera>(e, &world.em)
-                            .and_then(|c| c.active.then_some(c))
-                    })
-                    .and_then(|c| {
-                        let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
-                            let ((max, _), _) =
-                                c.view() * (s.matrix() * ((dimensions / 2.0), 1.0), 1.0);
-                            let ((min, _), _) =
-                                c.view() * (s.matrix() * ((-dimensions / 2.0), 1.0), 1.0);
-                            let mouse_position = Vec2::new(
-                                mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
-                                -(mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0),
-                            );
+                if let ElementState::Pressed = s {
+                    world
+                        .em
+                        .entities
+                        .keys()
+                        .cloned()
+                        .find_map(|e| {
+                            world
+                                .cm
+                                .get::<Camera>(e, &world.em)
+                                .and_then(|c| c.active.then_some(c))
+                        })
+                        .and_then(|c| {
+                            let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
+                                let ((max, _), _) =
+                                    c.view() * (s.matrix() * ((dimensions / 2.0), 1.0), 1.0);
+                                let ((min, _), _) =
+                                    c.view() * (s.matrix() * ((-dimensions / 2.0), 1.0), 1.0);
+                                let mouse_position = Vec2::new(
+                                    mouse_position.0 / window_dimensions.0 as f32 * 2.0 - 1.0,
+                                    -(mouse_position.1 / window_dimensions.1 as f32 * 2.0 - 1.0),
+                                );
 
-                            (mouse_position.x() > min.x()
-                                && mouse_position.x() < max.x()
-                                && mouse_position.y() > min.y()
-                                && mouse_position.y() < max.y())
-                            .then_some(mouse_position)
-                        });
+                                (mouse_position.x() > min.x()
+                                    && mouse_position.x() < max.x()
+                                    && mouse_position.y() > min.y()
+                                    && mouse_position.y() < max.y())
+                                .then_some(mouse_position)
+                            });
 
-                        p
-                    })
+                            p
+                        })
+                } else {
+                    None
+                }
             } else {
                 None
             };
