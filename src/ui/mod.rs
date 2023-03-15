@@ -1,11 +1,11 @@
 pub mod button;
-pub mod callback;
 pub mod image;
+pub mod ui_callback;
 pub mod update;
 
 pub use button::Button;
-pub use callback::Callback;
 pub use image::Image;
+pub use ui_callback::UiCallback;
 pub use update::Update;
 
 use crate::UiManager;

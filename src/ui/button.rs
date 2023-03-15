@@ -1,4 +1,4 @@
-use super::{Callback, Ui, Update};
+use super::{Ui, UiCallback, Update};
 use crate::UiManager;
 use hex::{
     anyhow,
@@ -60,7 +60,7 @@ impl Ui for Button {
 
                     if let Some(c) = world
                         .cm
-                        .get_mut::<Callback<Vec2>>(e, &world.em)
+                        .get_mut::<UiCallback<Vec2>>(e, &world.em)
                         .and_then(|c| c.active.then_some(c))
                     {
                         c.value = p;
