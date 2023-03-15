@@ -1,4 +1,4 @@
-use hex::{cid, hecs::component_manager::Component};
+use hex::{cid, ecs::component_manager::Component};
 
 pub struct Callback<T> {
     pub value: Option<T>,

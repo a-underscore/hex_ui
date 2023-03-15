@@ -3,8 +3,8 @@ use crate::UiManager;
 use hex::{
     anyhow,
     components::{Camera, Transform},
+    ecs::{ev::Control, Ev},
     glium::glutin::event::{ElementState, Event, MouseButton, WindowEvent},
-    hecs::{ev::Control, Ev},
     math::Vec2,
 };
 

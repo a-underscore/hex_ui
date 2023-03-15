@@ -3,8 +3,8 @@ use hex::{
     anyhow,
     assets::Shader,
     components::{Camera, Transform},
+    ecs::{ev::Control, system_manager::System, Ev, World},
     glium::{glutin::event::Event, index::NoIndices, uniform, uniforms::Sampler, Display, Surface},
-    hecs::{ev::Control, system_manager::System, Ev, World},
 };
 
 pub static UI_VERTEX_SRC: &str = include_str!("ui_vertex.glsl");

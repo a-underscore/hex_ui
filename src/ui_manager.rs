@@ -1,11 +1,11 @@
 use crate::Ui;
 use hex::{
     anyhow,
+    ecs::{ev::Control, system_manager::System, world::World, Ev},
     glium::glutin::{
         dpi::{PhysicalPosition, PhysicalSize},
         event::{Event, WindowEvent},
     },
-    hecs::{ev::Control, system_manager::System, world::World, Ev},
 };
 
 #[derive(Default)]

@@ -1,18 +1,15 @@
 pub mod button;
 pub mod callback;
 pub mod image;
+pub mod update;
 
 pub use button::Button;
 pub use callback::Callback;
 pub use image::Image;
+pub use update::Update;
 
 use crate::UiManager;
-use hex::{
-    anyhow, cid,
-    hecs::{component_manager::Component, Ev, World},
-};
-
-pub type Update = Box<dyn FnMut(usize, &mut Ev, &mut World) -> anyhow::Result<()>>;
+use hex::{anyhow, cid, ecs::component_manager::Component};
 
 pub trait Ui {
     fn ui(&mut self, manager: &mut UiManager) -> anyhow::Result<Update>;

@@ -1,11 +1,11 @@
 use hex::{
     assets::{Shape, Texture},
     cid,
+    ecs::component_manager::Component,
     glium::{
         draw_parameters::{Blend, DepthTest},
         Depth, DrawParameters,
     },
-    hecs::component_manager::Component,
 };
 
 #[derive(Clone)]
