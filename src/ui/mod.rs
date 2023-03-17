@@ -10,10 +10,17 @@ pub use ui_callback::UiCallback;
 pub use update::Update;
 
 use crate::UiManager;
-use hex::{cid, ecs::component_manager::Component};
+use hex::{
+    anyhow, cid,
+    ecs::{component_manager::Component, Ev},
+};
 
 pub trait Ui {
-    fn ui<'a>(&mut self, manager: &mut UiManager) -> Option<Update<'a>>;
+    fn ui<'a>(
+        &mut self,
+        event: &mut Ev,
+        manager: &mut UiManager,
+    ) -> anyhow::Result<Option<Update<'a>>>;
 }
 
 impl Component for Box<dyn Ui> {

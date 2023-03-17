@@ -49,12 +49,14 @@ impl System<'_> for UiManager {
         }
 
         for e in world.em.entities.keys().cloned().collect::<Vec<_>>() {
-            if let Some(mut u) = world
+            if let Some(u) = world
                 .cm
                 .get_mut::<Box<dyn Ui>>(e, &world.em)
-                .and_then(|u| u.ui(self))
+                .map(|u| u.ui(event, self))
             {
-                u.0(e, event, world)?;
+                if let Some(mut u) = u? {
+                    u.0(e, event, world)?;
+                }
             }
         }
 

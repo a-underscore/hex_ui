@@ -1,6 +1,7 @@
 use super::{Ui, UiCallback, Update};
 use crate::UiManager;
 use hex::{
+    anyhow,
     components::{Camera, Transform},
     ecs::{ev::Control, Ev},
     glium::glutin::event::{ElementState, Event, MouseButton, WindowEvent},
@@ -14,13 +15,17 @@ pub struct Button {
 }
 
 impl Ui for Button {
-    fn ui<'a>(&mut self, manager: &mut UiManager) -> Option<Update<'a>> {
+    fn ui<'a>(
+        &mut self,
+        _: &mut Ev,
+        manager: &mut UiManager,
+    ) -> anyhow::Result<Option<Update<'a>>> {
         if self.active {
             let dimensions = self.dimensions;
             let window_dimensions = manager.window_dimensions;
             let mouse_position = manager.mouse_position;
 
-            Some(Update::new(move |e, event, world| {
+            Ok(Some(Update::new(move |e, event, world| {
                 if let Ev::Event(Control {
                     event:
                         Event::WindowEvent {
@@ -80,9 +85,9 @@ impl Ui for Button {
                 };
 
                 Ok(())
-            }))
+            })))
         } else {
-            None
+            Ok(None)
         }
     }
 }
