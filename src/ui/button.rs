@@ -35,8 +35,8 @@ impl Ui for Button {
                 flow: _,
             }) = event
             {
-                if let ElementState::Pressed = s {
-                    let p = world
+                let p = if let ElementState::Pressed = s {
+                    world
                         .em
                         .entities
                         .keys()
@@ -64,15 +64,17 @@ impl Ui for Button {
                                     && mouse_position.y() < max.y())
                                 .then_some(mouse_position)
                             })
-                        });
+                        })
+                } else {
+                    None
+                };
 
-                    if let Some(c) = world
-                        .cm
-                        .get_mut::<UiCallback<Vec2>>(e, &world.em)
-                        .and_then(|c| c.active.then_some(c))
-                    {
-                        c.value = p;
-                    }
+                if let Some(c) = world
+                    .cm
+                    .get_mut::<UiCallback<Vec2>>(e, &world.em)
+                    .and_then(|c| c.active.then_some(c))
+                {
+                    c.value = p;
                 }
             };
 
