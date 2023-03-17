@@ -21,7 +21,7 @@ impl Ui for Button {
         let mouse_position = manager.mouse_position;
 
         Ok(Box::new(move |e, event, world| {
-            let p = if let Ev::Event(Control {
+            if let Ev::Event(Control {
                 event:
                     Event::WindowEvent {
                         event:
@@ -36,7 +36,7 @@ impl Ui for Button {
             }) = event
             {
                 if let ElementState::Pressed = s {
-                    world
+                    let p = world
                         .em
                         .entities
                         .keys()
@@ -48,7 +48,7 @@ impl Ui for Button {
                                 .and_then(|c| c.active.then_some(c))
                         })
                         .and_then(|c| {
-                            let p = world.cm.get::<Transform>(e, &world.em).and_then(|s| {
+                            world.cm.get::<Transform>(e, &world.em).and_then(|s| {
                                 let ((max, _), _) =
                                     c.view() * (s.matrix() * ((dimensions / 2.0), 1.0), 1.0);
                                 let ((min, _), _) =
@@ -63,24 +63,19 @@ impl Ui for Button {
                                     && mouse_position.y() > min.y()
                                     && mouse_position.y() < max.y())
                                 .then_some(mouse_position)
-                            });
+                            })
+                        });
 
-                            p
-                        })
-                } else {
-                    None
+                    if let Some(c) = world
+                        .cm
+                        .get_mut::<UiCallback<Vec2>>(e, &world.em)
+                        .and_then(|c| c.active.then_some(c))
+                    {
+                        c.value = p;
+                    }
                 }
-            } else {
-                None
             };
 
-            if let Some(c) = world
-                .cm
-                .get_mut::<UiCallback<Vec2>>(e, &world.em)
-                .and_then(|c| c.active.then_some(c))
-            {
-                c.value = p;
-            }
             Ok(())
         }))
     }

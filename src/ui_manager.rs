@@ -15,8 +15,8 @@ pub struct UiManager {
 }
 
 impl System<'_> for UiManager {
-    fn update(&mut self, ev: &mut Ev, world: &mut World) -> anyhow::Result<()> {
-        match ev {
+    fn update(&mut self, event: &mut Ev, world: &mut World) -> anyhow::Result<()> {
+        match event {
             Ev::Event(Control {
                 event:
                     Event::WindowEvent {
@@ -53,11 +53,9 @@ impl System<'_> for UiManager {
                 .cm
                 .get_mut::<Box<dyn Ui>>(e, &world.em)
                 .and_then(|u| u.active().then_some(u))
-                .map(|u| u.ui(self).map(|c| (e, c)))
+                .map(|u| u.ui(self).map(|c| c))
             {
-                let (e, mut u) = u?;
-
-                u(e, ev, world)?;
+                u?(e, event, world)?;
             }
         }
 
