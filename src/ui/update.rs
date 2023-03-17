@@ -3,7 +3,9 @@ use hex::{
     ecs::{Ev, World},
 };
 
-pub struct Update<'a>(pub Box<dyn FnMut(usize, &mut Ev, &mut World) -> anyhow::Result<()> + 'a>);
+pub type UpdateFn<'a> = Box<dyn FnMut(usize, &mut Ev, &mut World) -> anyhow::Result<()> + 'a>;
+
+pub struct Update<'a>(pub UpdateFn<'a>);
 
 impl<'a> Update<'a> {
     pub fn new<F>(f: F) -> Self

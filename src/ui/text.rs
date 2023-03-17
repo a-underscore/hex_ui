@@ -19,7 +19,7 @@ impl Ui for Text {
                     flow: _,
                 }) = event
                 {
-                    if let Some(_) = world.cm.get::<Image>(e, &world.em) {
+                    if world.cm.get::<Image>(e, &world.em).is_some() {
                         todo!()
                     }
                 }
