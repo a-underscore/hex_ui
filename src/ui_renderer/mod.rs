@@ -51,7 +51,7 @@ impl<'a> System<'a> for UiRenderer {
                                 world
                                     .cm
                                     .get::<Image>(e, &world.em)
-                                    .and_then(|s| s.active.then_some(s))?,
+                                    .and_then(|s| s.0.active.then_some(s))?,
                                 world
                                     .cm
                                     .get::<Transform>(e, &world.em)
@@ -60,26 +60,26 @@ impl<'a> System<'a> for UiRenderer {
                         })
                         .collect();
 
-                    sprites.sort_by(|(s1, _), (s2, _)| s1.z.total_cmp(&s2.z));
+                    sprites.sort_by(|(s1, _), (s2, _)| s1.0.z.total_cmp(&s2.0.z));
 
                     sprites
                 };
 
                 for (s, t) in sprites {
                     let uniform = uniform! {
-                        z: s.z,
+                        z: s.0.z,
                         transform: t.matrix().0,
                         camera_view: c.view().0,
-                        color: s.color,
-                        tex: Sampler(&*s.texture.buffer, s.texture.sampler_behaviour),
+                        color: s.0.color,
+                        tex: Sampler(&*s.0.texture.buffer, s.0.texture.sampler_behaviour),
                     };
 
                     target.draw(
-                        &*s.shape.vertices,
-                        NoIndices(s.shape.format),
+                        &*s.0.shape.vertices,
+                        NoIndices(s.0.shape.format),
                         &self.shader.program,
                         &uniform,
-                        &s.draw_parameters,
+                        &s.0.draw_parameters,
                     )?;
                 }
             }
