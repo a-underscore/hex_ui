@@ -1,10 +1,11 @@
-use crate::ui::Image;
+use crate::ScreenPos;
 use hex::{
     anyhow,
     assets::Shader,
-    components::{Camera, Transform},
+    components::{Camera, Sprite},
     ecs::{ev::Control, system_manager::System, Ev, World},
     glium::{glutin::event::Event, index::NoIndices, uniform, uniforms::Sampler, Display, Surface},
+    math::Mat3,
 };
 
 pub static UI_VERTEX_SRC: &str = include_str!("ui_vertex.glsl");
@@ -50,36 +51,36 @@ impl<'a> System<'a> for UiRenderer {
                             Some((
                                 world
                                     .cm
-                                    .get::<Image>(e, &world.em)
-                                    .and_then(|s| s.0.active.then_some(s))?,
+                                    .get::<Sprite>(e, &world.em)
+                                    .and_then(|s| s.active.then_some(s))?,
                                 world
                                     .cm
-                                    .get::<Transform>(e, &world.em)
+                                    .get::<ScreenPos>(e, &world.em)
                                     .and_then(|t| t.active.then_some(t))?,
                             ))
                         })
                         .collect();
 
-                    sprites.sort_by(|(s1, _), (s2, _)| s1.0.z.total_cmp(&s2.0.z));
+                    sprites.sort_by(|(s1, _), (s2, _)| s1.z.total_cmp(&s2.z));
 
                     sprites
                 };
 
                 for (s, t) in sprites {
                     let uniform = uniform! {
-                        z: s.0.z,
-                        transform: t.matrix().0,
+                        z: s.z,
+                        transform: Mat3::translation(t.position).0,
                         camera_view: c.view().0,
-                        color: s.0.color,
-                        tex: Sampler(&*s.0.texture.buffer, s.0.texture.sampler_behaviour),
+                        color: s.color,
+                        tex: Sampler(&*s.texture.buffer, s.texture.sampler_behaviour),
                     };
 
                     target.draw(
-                        &*s.0.shape.vertices,
-                        NoIndices(s.0.shape.format),
+                        &*s.shape.vertices,
+                        NoIndices(s.shape.format),
                         &self.shader.program,
                         &uniform,
-                        &s.0.draw_parameters,
+                        &s.draw_parameters,
                     )?;
                 }
             }

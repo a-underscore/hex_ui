@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 ab_glyph = "0.2.20"
 hex = { git = "https://github.com/a-underscore/hex", version = "0.1.0" }
+image = "0.24.5"
