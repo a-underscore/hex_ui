@@ -1,31 +1,23 @@
-use crate::{
-    ui::{Ui, Update},
-    UiManager,
-};
 use ab_glyph::{point, Font, FontRef, Glyph, Point, PxScale, ScaleFont};
 use hex::{
     anyhow,
     assets::Texture,
-    components::Sprite,
-    ecs::{component_manager::Component, ev::Control, Ev},
     glium::{
-        glutin::event::Event,
         texture::{MipmapsOption, RawImage2d},
         uniforms::SamplerBehavior,
-        Display, Texture2d,
+        Display,
     },
 };
 use image::{DynamicImage, Rgba};
-use std::rc::Rc;
 
 pub trait Text
 where
     Self: Sized,
 {
-    fn texture<'a>(
+    fn texture(
         display: &Display,
         content: &str,
-        font: FontRef<'a>,
+        font: FontRef<'_>,
         scale: f32,
         color: [f32; 4],
         mipmaps_option: MipmapsOption,
@@ -34,10 +26,10 @@ where
 }
 
 impl Text for Texture {
-    fn texture<'a>(
+    fn texture(
         display: &Display,
         content: &str,
-        font: FontRef<'a>,
+        font: FontRef<'_>,
         scale: f32,
         color: [f32; 4],
         mipmaps_option: MipmapsOption,
@@ -80,7 +72,7 @@ impl Text for Texture {
         Self::new(
             display,
             RawImage2d::from_raw_rgb(
-                image.pixels().map(|i| i.0).flatten().collect::<Vec<_>>(),
+                image.pixels().flat_map(|i| i.0).collect::<Vec<_>>(),
                 (glyphs_width, glyphs_height),
             ),
             mipmaps_option,
@@ -89,7 +81,7 @@ impl Text for Texture {
     }
 }
 
-pub fn layout_paragraph<'a, S, F>(content: &str, font: S, position: Point) -> Vec<Glyph>
+pub fn layout_paragraph<S, F>(content: &str, font: S, position: Point) -> Vec<Glyph>
 where
     S: ScaleFont<F>,
     F: Font,
