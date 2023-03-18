@@ -58,11 +58,12 @@ impl Ui for Button {
                                     .get::<ScreenPos>(e, &world.em)
                                     .and_then(|t| t.active.then_some(t))
                                     .and_then(|s| {
-                                        let translation = Mat3::translation(s.position);
-                                        let ((max, _), _) = c.view()
-                                            * (translation * ((dimensions / 2.0), 1.0), 1.0);
+                                        let transform =
+                                            Mat3::translation(s.position) * Mat3::scale(s.scale);
+                                        let ((max, _), _) =
+                                            c.view() * (transform * ((dimensions / 2.0), 1.0), 1.0);
                                         let ((min, _), _) = c.view()
-                                            * (translation * ((-dimensions / 2.0), 1.0), 1.0);
+                                            * (transform * ((-dimensions / 2.0), 1.0), 1.0);
                                         let mouse_position = Vec2::new(
                                             mouse_position.0 / window_dimensions.0 as f32 * 2.0
                                                 - 1.0,

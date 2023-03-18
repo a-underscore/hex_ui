@@ -14,29 +14,34 @@ pub trait Text
 where
     Self: Sized,
 {
-    fn texture(
+    fn text<S>(
         display: &Display,
-        content: &str,
+        content: S,
         font: FontRef<'_>,
         scale: f32,
         color: [f32; 4],
         mipmaps_option: MipmapsOption,
         sampler_behavior: SamplerBehavior,
-    ) -> anyhow::Result<Self>;
+    ) -> anyhow::Result<Self>
+    where
+        S: AsRef<str>;
 }
 
 impl Text for Texture {
-    fn texture(
+    fn text<S>(
         display: &Display,
-        content: &str,
+        content: S,
         font: FontRef<'_>,
         scale: f32,
         color: [f32; 4],
         mipmaps_option: MipmapsOption,
         sampler_behavior: SamplerBehavior,
-    ) -> anyhow::Result<Self> {
+    ) -> anyhow::Result<Self>
+    where
+        S: AsRef<str>,
+    {
         let scaled_font = font.as_scaled(PxScale::from(scale));
-        let glyphs = layout_paragraph(content, scaled_font, point(0.0, 0.0));
+        let glyphs = layout_paragraph(content.as_ref(), scaled_font, point(0.0, 0.0));
         let glyphs_height = scaled_font.height().ceil() as u32;
         let glyphs_width = {
             let min_x = glyphs.first().unwrap().position.x;
@@ -71,9 +76,9 @@ impl Text for Texture {
 
         Self::new(
             display,
-            RawImage2d::from_raw_rgb(
-                image.pixels().flat_map(|i| i.0).collect::<Vec<_>>(),
-                (glyphs_width, glyphs_height),
+            RawImage2d::from_raw_rgba_reversed(
+                &image.iter().cloned().collect::<Vec<_>>(),
+                image.dimensions(),
             ),
             mipmaps_option,
             sampler_behavior,
@@ -111,7 +116,7 @@ where
         last_glyph = Some(glyph.clone());
         caret.x += font.h_advance(glyph.id);
 
-        if !c.is_whitespace() {
+        if !c.is_whitespace() && caret.x <= position.x {
             caret = point(position.x, caret.y + v_advance);
             glyph.position = caret;
             last_glyph = None;

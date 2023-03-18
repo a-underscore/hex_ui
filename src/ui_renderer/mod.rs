@@ -69,7 +69,7 @@ impl<'a> System<'a> for UiRenderer {
                 for (s, t) in sprites {
                     let uniform = uniform! {
                         z: s.z,
-                        transform: Mat3::translation(t.position).0,
+                        transform: (Mat3::translation(t.position) * Mat3::scale(t.scale)).0,
                         camera_view: c.view().0,
                         color: s.color,
                         tex: Sampler(&*s.texture.buffer, s.texture.sampler_behaviour),
