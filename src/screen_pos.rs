@@ -1,5 +1,6 @@
 use hex::{cid, ecs::component_manager::Component, math::Vec2};
 
+#[derive(Clone)]
 pub struct ScreenPos {
     pub position: Vec2,
     pub scale: Vec2,
