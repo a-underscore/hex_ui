@@ -23,8 +23,8 @@ impl UiRenderer {
     }
 }
 
-impl<'a> System<'a> for UiRenderer {
-    fn update(&mut self, event: &mut Ev, world: &mut World<'a>) -> anyhow::Result<()> {
+impl System<'_> for UiRenderer {
+    fn update(&mut self, event: &mut Ev, world: &mut World) -> anyhow::Result<()> {
         if let Ev::Draw((
             Control {
                 event: Event::MainEventsCleared,
