@@ -1,7 +1,7 @@
 use crate::Ui;
 use hex::{
     anyhow,
-    ecs::{ev::Control, system_manager::System, world::World, Ev},
+    ecs::{ev::Control, system_manager::System, Ev, Scene, World},
     glium::glutin::{
         dpi::{PhysicalPosition, PhysicalSize},
         event::{Event, WindowEvent},
@@ -15,7 +15,7 @@ pub struct UiManager {
 }
 
 impl System<'_> for UiManager {
-    fn update(&mut self, event: &mut Ev, world: &mut World) -> anyhow::Result<()> {
+    fn update(&mut self, event: &mut Ev, _: &mut Scene, world: &mut World) -> anyhow::Result<()> {
         match event {
             Ev::Event(Control {
                 event:

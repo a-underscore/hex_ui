@@ -3,7 +3,7 @@ use hex::{
     anyhow,
     assets::Shader,
     components::{Camera, Sprite},
-    ecs::{ev::Control, system_manager::System, Ev, World},
+    ecs::{ev::Control, system_manager::System, Ev, Scene, World},
     glium::{glutin::event::Event, index::NoIndices, uniform, uniforms::Sampler, Display, Surface},
     math::Mat3,
 };
@@ -24,7 +24,7 @@ impl UiRenderer {
 }
 
 impl System<'_> for UiRenderer {
-    fn update(&mut self, event: &mut Ev, world: &mut World) -> anyhow::Result<()> {
+    fn update(&mut self, event: &mut Ev, _: &mut Scene, world: &mut World) -> anyhow::Result<()> {
         if let Ev::Draw((
             Control {
                 event: Event::MainEventsCleared,
