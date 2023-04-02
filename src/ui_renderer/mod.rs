@@ -8,9 +8,6 @@ use hex::{
     math::Mat3,
 };
 
-pub static UI_VERTEX_SRC: &str = include_str!("ui_vertex.glsl");
-pub static UI_FRAGMENT_SRC: &str = include_str!("ui_fragment.glsl");
-
 pub struct UiRenderer {
     pub shader: Shader,
 }
@@ -18,7 +15,12 @@ pub struct UiRenderer {
 impl UiRenderer {
     pub fn new(display: &Display) -> anyhow::Result<Self> {
         Ok(Self {
-            shader: Shader::new(display, UI_VERTEX_SRC, UI_FRAGMENT_SRC, None)?,
+            shader: Shader::new(
+                display,
+                include_str!("ui_vertex.glsl"),
+                include_str!("ui_fragment.glsl"),
+                None,
+            )?,
         })
     }
 }
