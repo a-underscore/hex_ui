@@ -6,8 +6,9 @@ pub use update::Update;
 
 use crate::UiManager;
 use hex::{
-    anyhow, cid,
+    anyhow,
     ecs::{component_manager::Component, Ev, Id},
+    id,
 };
 
 pub trait Ui {
@@ -20,6 +21,6 @@ pub trait Ui {
 
 impl Component for Box<dyn Ui> {
     fn id() -> Id {
-        cid!()
+        id!()
     }
 }

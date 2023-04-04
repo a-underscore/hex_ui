@@ -1,6 +1,6 @@
 use hex::{
-    cid,
     ecs::{component_manager::Component, Id},
+    id,
     math::Vec2,
 };
 
@@ -13,6 +13,6 @@ pub struct ScreenPos {
 
 impl Component for ScreenPos {
     fn id() -> Id {
-        cid!()
+        id!()
     }
 }

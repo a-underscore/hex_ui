@@ -1,6 +1,6 @@
 use hex::{
-    cid,
     ecs::{component_manager::Component, Id},
+    id,
 };
 
 pub struct UiCallback<T> {
@@ -10,6 +10,6 @@ pub struct UiCallback<T> {
 
 impl<T> Component for UiCallback<T> {
     fn id() -> Id {
-        cid!()
+        id!()
     }
 }
