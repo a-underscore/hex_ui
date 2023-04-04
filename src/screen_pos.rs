@@ -1,4 +1,8 @@
-use hex::{cid, ecs::component_manager::Component, math::Vec2};
+use hex::{
+    cid,
+    ecs::{component_manager::Component, Id},
+    math::Vec2,
+};
 
 #[derive(Clone)]
 pub struct ScreenPos {
@@ -8,7 +12,7 @@ pub struct ScreenPos {
 }
 
 impl Component for ScreenPos {
-    fn id() -> usize {
+    fn id() -> Id {
         cid!()
     }
 }

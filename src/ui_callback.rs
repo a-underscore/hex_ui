@@ -1,4 +1,7 @@
-use hex::{cid, ecs::component_manager::Component};
+use hex::{
+    cid,
+    ecs::{component_manager::Component, Id},
+};
 
 pub struct UiCallback<T> {
     pub value: Option<T>,
@@ -6,7 +9,7 @@ pub struct UiCallback<T> {
 }
 
 impl<T> Component for UiCallback<T> {
-    fn id() -> usize {
+    fn id() -> Id {
         cid!()
     }
 }
