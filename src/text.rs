@@ -19,6 +19,7 @@ where
         content: S,
         font: FontRef<'_>,
         scale: f32,
+        max_width: f32,
         color: [f32; 4],
         mipmaps_option: MipmapsOption,
         sampler_behavior: SamplerBehavior,
@@ -33,6 +34,7 @@ impl Text for Texture {
         content: S,
         font: FontRef<'_>,
         scale: f32,
+        max_width: f32,
         color: [f32; 4],
         mipmaps_option: MipmapsOption,
         sampler_behavior: SamplerBehavior,
@@ -41,7 +43,7 @@ impl Text for Texture {
         S: AsRef<str>,
     {
         let scaled_font = font.as_scaled(PxScale::from(scale));
-        let glyphs = layout_paragraph(content.as_ref(), scaled_font, point(0.0, 0.0));
+        let glyphs = layout_paragraph(content.as_ref(), max_width, scaled_font, point(0.0, 0.0));
         let glyphs_height = scaled_font.height().ceil() as u32;
         let glyphs_width = {
             let min_x = glyphs.first().unwrap().position.x;
@@ -76,17 +78,14 @@ impl Text for Texture {
 
         Self::new(
             display,
-            RawImage2d::from_raw_rgba_reversed(
-                &image.iter().cloned().collect::<Vec<_>>(),
-                image.dimensions(),
-            ),
+            RawImage2d::from_raw_rgba_reversed(&image, image.dimensions()),
             mipmaps_option,
             sampler_behavior,
         )
     }
 }
 
-pub fn layout_paragraph<S, F>(content: &str, font: S, position: Point) -> Vec<Glyph>
+pub fn layout_paragraph<S, F>(content: &str, max_width: f32, font: S, position: Point) -> Vec<Glyph>
 where
     S: ScaleFont<F>,
     F: Font,
@@ -102,6 +101,7 @@ where
                 caret = point(position.x, caret.y + v_advance);
                 last_glyph = None;
             }
+
             continue;
         }
 
@@ -116,7 +116,7 @@ where
         last_glyph = Some(glyph.clone());
         caret.x += font.h_advance(glyph.id);
 
-        if !c.is_whitespace() {
+        if !c.is_whitespace() && caret.x <= position.x + max_width {
             caret = point(position.x, caret.y + v_advance);
             glyph.position = caret;
             last_glyph = None;
