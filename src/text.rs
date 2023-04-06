@@ -78,7 +78,7 @@ impl Text for Texture {
 
         Self::new(
             display,
-            RawImage2d::from_raw_rgba_reversed(&image, image.dimensions()),
+            RawImage2d::from_raw_rgba_reversed(&image.clone().into_raw(), image.dimensions()),
             mipmaps_option,
             sampler_behavior,
         )
