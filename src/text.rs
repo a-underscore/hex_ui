@@ -116,7 +116,7 @@ where
         last_glyph = Some(glyph.clone());
         caret.x += font.h_advance(glyph.id);
 
-        if !c.is_whitespace() && caret.x <= position.x {
+        if !c.is_whitespace() {
             caret = point(position.x, caret.y + v_advance);
             glyph.position = caret;
             last_glyph = None;
