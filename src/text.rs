@@ -61,8 +61,8 @@ impl Text for Texture {
                 let bounds = outlined.px_bounds();
 
                 outlined.draw(|x, y, v| {
-                    let x = x + bounds.min.x as u32;
-                    let y = y + bounds.min.y as u32;
+                    let x = x + bounds.min.x as u32 - 1;
+                    let y = y + bounds.min.y as u32 - 1;
                     let px = image.get_pixel(x, y);
 
                     image.put_pixel(
