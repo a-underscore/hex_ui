@@ -25,7 +25,7 @@ impl Ui for Button {
             let window_dimensions = manager.window_dimensions;
             let mouse_position = manager.mouse_position;
 
-            Ok(Some(Update::new(move |e, event, world| {
+            Ok(Some(Update::new(move |e, event, (em, cm)| {
                 if let Ev::Event(Control {
                     event:
                         Event::WindowEvent {
@@ -41,21 +41,14 @@ impl Ui for Button {
                 }) = event
                 {
                     let p = if let ElementState::Pressed = s {
-                        world
-                            .em
-                            .entities
+                        em.entities
                             .keys()
                             .cloned()
                             .find_map(|e| {
-                                world
-                                    .cm
-                                    .get::<Camera>(e, &world.em)
-                                    .and_then(|c| c.active.then_some(c))
+                                cm.get::<Camera>(e, em).and_then(|c| c.active.then_some(c))
                             })
                             .and_then(|c| {
-                                world
-                                    .cm
-                                    .get::<ScreenPos>(e, &world.em)
+                                cm.get::<ScreenPos>(e, em)
                                     .and_then(|t| t.active.then_some(t))
                                     .and_then(|s| {
                                         let transform =
@@ -82,9 +75,8 @@ impl Ui for Button {
                         None
                     };
 
-                    if let Some(c) = world
-                        .cm
-                        .get_mut::<UiCallback<Vec2>>(e, &world.em)
+                    if let Some(c) = cm
+                        .get_mut::<UiCallback<Vec2>>(e, em)
                         .and_then(|c| c.active.then_some(c))
                     {
                         c.value = p;

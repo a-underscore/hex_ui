@@ -1,7 +1,7 @@
 use crate::Ui;
 use hex::{
     anyhow,
-    ecs::{ev::Control, system_manager::System, Ev, Scene, World},
+    ecs::{ev::Control, system_manager::System, ComponentManager, EntityManager, Ev, Scene},
     glium::glutin::{
         dpi::{PhysicalPosition, PhysicalSize},
         event::{Event, WindowEvent},
@@ -15,7 +15,12 @@ pub struct UiManager {
 }
 
 impl System<'_> for UiManager {
-    fn update(&mut self, event: &mut Ev, _: &mut Scene, world: &mut World) -> anyhow::Result<()> {
+    fn update(
+        &mut self,
+        event: &mut Ev,
+        _: &mut Scene,
+        (em, cm): (&mut EntityManager, &mut ComponentManager),
+    ) -> anyhow::Result<()> {
         match event {
             Ev::Event(Control {
                 event:
@@ -48,14 +53,22 @@ impl System<'_> for UiManager {
             _ => {}
         }
 
-        for e in world.em.entities.clone().into_keys() {
-            if let Some(u) = world
-                .cm
-                .get_mut::<Box<dyn Ui>>(e, &world.em)
-                .map(|u| u.ui(event, self))
+        for (e, u) in em
+            .entities
+            .keys()
+            .cloned()
+            .filter_map(|e| {
+                Some(
+                    cm.get_mut::<Box<dyn Ui>>(e, &em)
+                        .map(|u| u.ui(event, self))?
+                        .map(|u| (e, u)),
+                )
+            })
+            .collect::<anyhow::Result<Vec<_>>>()?
+        {
             {
-                if let Some(mut u) = u? {
-                    u.0(e, event, world)?;
+                if let Some(mut u) = u {
+                    u.0(e, event, (em, cm))?;
                 }
             }
         }
