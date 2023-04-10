@@ -37,7 +37,7 @@ impl System<'_> for UiRenderer {
                 .entities
                 .keys()
                 .cloned()
-                .find_map(|e| cm.get::<Camera>(e, &em).and_then(|c| c.active.then_some(c)))
+                .find_map(|e| cm.get::<Camera>(e, em).and_then(|c| c.active.then_some(c)))
             {
                 target.clear_depth(1.0);
 
@@ -48,9 +48,9 @@ impl System<'_> for UiRenderer {
                         .cloned()
                         .filter_map(|e| {
                             Some((
-                                cm.get::<Sprite>(e, &em)
+                                cm.get::<Sprite>(e, em)
                                     .and_then(|s| s.active.then_some(s))?,
-                                cm.get::<ScreenPos>(e, &em)
+                                cm.get::<ScreenPos>(e, em)
                                     .and_then(|t| t.active.then_some(t))?,
                             ))
                         })

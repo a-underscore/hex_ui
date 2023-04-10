@@ -59,7 +59,7 @@ impl System<'_> for UiManager {
             .cloned()
             .filter_map(|e| {
                 Some(
-                    cm.get_mut::<Box<dyn Ui>>(e, &em)
+                    cm.get_mut::<Box<dyn Ui>>(e, em)
                         .map(|u| u.ui(event, self))?
                         .map(|u| (e, u)),
                 )
