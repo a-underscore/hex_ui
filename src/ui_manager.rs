@@ -48,7 +48,7 @@ impl System<'_> for UiManager {
             _ => {}
         }
 
-        for e in world.em.entities.keys().cloned().collect::<Vec<_>>() {
+        for e in world.em.entities.clone().into_keys() {
             if let Some(u) = world
                 .cm
                 .get_mut::<Box<dyn Ui>>(e, &world.em)
