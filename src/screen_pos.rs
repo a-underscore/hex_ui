@@ -1,13 +1,13 @@
 use hex::{
     ecs::{component_manager::Component, Id},
     id,
-    math::Vec2,
+    math::Vec2d,
 };
 
 #[derive(Clone)]
 pub struct ScreenPos {
-    pub position: Vec2,
-    pub scale: Vec2,
+    pub position: Vec2d,
+    pub scale: Vec2d,
     pub active: bool,
 }
 

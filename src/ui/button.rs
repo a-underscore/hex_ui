@@ -5,12 +5,12 @@ use hex::{
     components::Camera,
     ecs::{ev::Control, Ev},
     glium::glutin::event::{ElementState, Event, MouseButton, WindowEvent},
-    math::{Mat3, Vec2},
+    math::{Mat3d, Vec2d},
 };
 
 #[derive(Clone)]
 pub struct Button {
-    pub dimensions: Vec2,
+    pub dimensions: Vec2d,
     pub active: bool,
 }
 
@@ -52,12 +52,12 @@ impl Ui for Button {
                                     .and_then(|t| t.active.then_some(t))
                                     .and_then(|s| {
                                         let transform =
-                                            Mat3::translation(s.position) * Mat3::scale(s.scale);
+                                            Mat3d::translation(s.position) * Mat3d::scale(s.scale);
                                         let ((max, _), _) =
                                             c.view() * (transform * ((dimensions / 2.0), 1.0), 1.0);
                                         let ((min, _), _) = c.view()
                                             * (transform * ((-dimensions / 2.0), 1.0), 1.0);
-                                        let mouse_position = Vec2::new(
+                                        let mouse_position = Vec2d::new(
                                             mouse_position.0 / window_dimensions.0 as f32 * 2.0
                                                 - 1.0,
                                             -(mouse_position.1 / window_dimensions.1 as f32 * 2.0
@@ -76,7 +76,7 @@ impl Ui for Button {
                     };
 
                     if let Some(c) = cm
-                        .get_mut::<UiCallback<Vec2>>(e, em)
+                        .get_mut::<UiCallback<Vec2d>>(e, em)
                         .and_then(|c| c.active.then_some(c))
                     {
                         c.value = p;

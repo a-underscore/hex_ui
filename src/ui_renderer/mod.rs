@@ -5,7 +5,7 @@ use hex::{
     components::{Camera, Sprite},
     ecs::{system_manager::System, ComponentManager, EntityManager, Ev, Scene},
     glium::{index::NoIndices, uniform, uniforms::Sampler, Display, Surface},
-    math::Mat3,
+    math::Mat3d,
 };
 
 pub struct UiRenderer {
@@ -64,7 +64,7 @@ impl System<'_> for UiRenderer {
                 for (s, t) in sprites {
                     let uniform = uniform! {
                         z: s.z,
-                        transform: (Mat3::translation(t.position) * Mat3::scale(t.scale)).0,
+                        transform: (Mat3d::translation(t.position) * Mat3d::scale(t.scale)).0,
                         camera_view: c.view().0,
                         color: s.color,
                         tex: Sampler(&*s.texture.buffer, s.texture.sampler_behaviour),
