@@ -91,7 +91,7 @@ impl<'a> System<'a> for UiRenderer<'a> {
                         NoIndices(s.shape.format),
                         &self.shader.program,
                         &uniform,
-                        &s.draw_parameters,
+                        &self.draw_parameters,
                     )?;
                 }
             }
