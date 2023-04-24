@@ -4,17 +4,33 @@ use hex::{
     assets::Shader,
     components::{Camera, Sprite},
     ecs::{system_manager::System, ComponentManager, EntityManager, Ev, Scene},
-    glium::{index::NoIndices, uniform, uniforms::Sampler, Display, Surface},
+    glium::{
+        draw_parameters::{Blend, DepthTest},
+        index::NoIndices,
+        uniform,
+        uniforms::Sampler,
+        Depth, Display, DrawParameters, Surface,
+    },
     math::Mat3d,
 };
 
-pub struct UiRenderer {
+pub struct UiRenderer<'a> {
+    pub draw_parameters: DrawParameters<'a>,
     pub shader: Shader,
 }
 
-impl UiRenderer {
+impl<'a> UiRenderer<'a> {
     pub fn new(display: &Display) -> anyhow::Result<Self> {
         Ok(Self {
+            draw_parameters: DrawParameters {
+                depth: Depth {
+                    test: DepthTest::IfLessOrEqual,
+                    write: true,
+                    ..Default::default()
+                },
+                blend: Blend::alpha_blending(),
+                ..Default::default()
+            },
             shader: Shader::new(
                 display,
                 include_str!("ui_vertex.glsl"),
@@ -25,7 +41,7 @@ impl UiRenderer {
     }
 }
 
-impl System<'_> for UiRenderer {
+impl<'a> System<'a> for UiRenderer<'a> {
     fn update(
         &mut self,
         event: &mut Ev,
