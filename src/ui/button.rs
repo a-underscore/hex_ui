@@ -54,8 +54,8 @@ impl Ui for Button {
                                         let transform =
                                             Mat3d::translation(s.position) * Mat3d::scale(s.scale);
                                         let ((max, _), _) =
-                                            c.view() * (transform * ((dimensions / 2.0), 1.0), 1.0);
-                                        let ((min, _), _) = c.view()
+                                            c.proj() * (transform * ((dimensions / 2.0), 1.0), 1.0);
+                                        let ((min, _), _) = c.proj()
                                             * (transform * ((-dimensions / 2.0), 1.0), 1.0);
                                         let mouse_position = Vec2d::new(
                                             mouse_position.0 / window_dimensions.0 as f32 * 2.0
