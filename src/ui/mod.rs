@@ -14,7 +14,7 @@ use hex::{
 pub trait Ui {
     fn ui<'a>(
         &mut self,
-        event: &mut Ev,
+        ev: &mut Ev,
         manager: &mut UiManager,
     ) -> anyhow::Result<Option<Update<'a>>>;
 }
