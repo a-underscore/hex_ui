@@ -17,11 +17,11 @@ pub struct UiManager {
 impl System<'_> for UiManager {
     fn update(
         &mut self,
-        event: &mut Ev,
+        ev: &mut Ev,
         _: &mut Scene,
         (em, cm): (&mut EntityManager, &mut ComponentManager),
     ) -> anyhow::Result<()> {
-        match event {
+        match ev {
             Ev::Event(Control {
                 event:
                     Event::WindowEvent {
@@ -60,7 +60,7 @@ impl System<'_> for UiManager {
             .filter_map(|e| {
                 Some(
                     cm.get_mut::<Box<dyn Ui>>(e, em)
-                        .map(|u| u.ui(event, self))?
+                        .map(|u| u.ui(ev, self))?
                         .map(|u| (e, u)),
                 )
             })
@@ -68,7 +68,7 @@ impl System<'_> for UiManager {
         {
             {
                 if let Some(mut u) = u {
-                    u.0(e, event, (em, cm))?;
+                    u.0(e, ev, (em, cm))?;
                 }
             }
         }
