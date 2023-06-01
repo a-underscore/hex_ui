@@ -1,4 +1,8 @@
-use crate::Ui;
+pub mod state;
+
+pub use state::State;
+
+use crate::{ui::Callback, ScreenPos, Ui};
 use hex::{
     anyhow,
     ecs::{ev::Control, system_manager::System, ComponentManager, EntityManager, Ev, Scene},
@@ -10,8 +14,7 @@ use hex::{
 
 #[derive(Default)]
 pub struct UiManager {
-    pub window_dimensions: (u32, u32),
-    pub mouse_position: (f32, f32),
+    pub state: State,
 }
 
 impl System<'_> for UiManager {
@@ -34,7 +37,7 @@ impl System<'_> for UiManager {
                     },
                 flow: _,
             }) => {
-                self.window_dimensions = (*x, *y);
+                self.state.window_dimensions = (*x, *y);
             }
             Ev::Event(Control {
                 event:
@@ -48,27 +51,22 @@ impl System<'_> for UiManager {
                     },
                 flow: _,
             }) => {
-                self.mouse_position = (*x as f32, *y as f32);
+                self.state.mouse_position = (*x as f32, *y as f32);
             }
             _ => {}
         }
 
-        for (e, u) in em
-            .entities
-            .keys()
-            .cloned()
-            .filter_map(|e| {
-                Some(
-                    cm.get_mut::<Box<dyn Ui>>(e, em)
-                        .map(|u| u.ui(ev, self))?
-                        .map(|u| (e, u)),
-                )
-            })
-            .collect::<anyhow::Result<Vec<_>>>()?
-        {
+        for e in em.entities.keys().cloned() {
+            if let Some(u) = cm
+                .get::<Box<dyn Ui>>(e, em)
+                .and_then(|u| Some(u.ui(cm.get::<ScreenPos>(e, em)?, ev, &self.state, (em, cm))))
             {
-                if let Some(mut u) = u {
-                    u.0(e, ev, (em, cm))?;
+                let u = u?;
+
+                if u {
+                    if let Some(c) = cm.get_mut::<Callback>(e, em) {
+                        c.set(u);
+                    }
                 }
             }
         }

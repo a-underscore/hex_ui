@@ -1,22 +1,26 @@
 pub mod button;
+pub mod callback;
 pub mod update;
 
 pub use button::Button;
+pub use callback::Callback;
 pub use update::Update;
 
-use crate::UiManager;
+use crate::{ui_manager::State, ScreenPos};
 use hex::{
     anyhow,
-    ecs::{component_manager::Component, Ev, Id},
+    ecs::{component_manager::Component, ComponentManager, EntityManager, Ev, Id},
     id,
 };
 
 pub trait Ui {
-    fn ui<'a>(
-        &mut self,
-        ev: &mut Ev,
-        manager: &mut UiManager,
-    ) -> anyhow::Result<Option<Update<'a>>>;
+    fn ui(
+        &self,
+        screen_pos: &ScreenPos,
+        ev: &Ev,
+        state: &State,
+        world: (&EntityManager, &ComponentManager),
+    ) -> anyhow::Result<bool>;
 }
 
 impl Component for Box<dyn Ui> {
