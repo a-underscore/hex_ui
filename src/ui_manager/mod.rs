@@ -59,7 +59,7 @@ impl System<'_> for UiManager {
         for e in em.entities.keys().cloned() {
             if let Some(u) = cm
                 .get::<Box<dyn Ui>>(e, em)
-                .and_then(|u| Some(u.ui(e, ev, &self.state, (em, cm))))
+                .map(|u| u.ui(e, ev, &self.state, (em, cm)))
             {
                 let u = u?;
 
