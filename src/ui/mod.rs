@@ -6,7 +6,7 @@ pub use button::Button;
 pub use callback::Callback;
 pub use update::Update;
 
-use crate::{ui_manager::State, ScreenPos};
+use crate::ui_manager::State;
 use hex::{
     anyhow,
     ecs::{component_manager::Component, ComponentManager, EntityManager, Ev, Id},
@@ -16,7 +16,7 @@ use hex::{
 pub trait Ui {
     fn ui(
         &self,
-        screen_pos: &ScreenPos,
+        id: Id,
         ev: &Ev,
         state: &State,
         world: (&EntityManager, &ComponentManager),

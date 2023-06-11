@@ -1,4 +1,4 @@
-use crate::ScreenPos;
+use crate::ScreenTransform;
 use hex::{
     anyhow,
     assets::Shader,
@@ -66,7 +66,7 @@ impl<'a> System<'a> for UiRenderer<'a> {
                             Some((
                                 cm.get::<Sprite>(e, em)
                                     .and_then(|s| s.active.then_some(s))?,
-                                cm.get::<ScreenPos>(e, em)
+                                cm.get::<ScreenTransform>(e, em)
                                     .and_then(|t| t.active.then_some(t))?,
                             ))
                         })

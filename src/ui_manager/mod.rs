@@ -2,7 +2,7 @@ pub mod state;
 
 pub use state::State;
 
-use crate::{ui::Callback, ScreenPos, Ui};
+use crate::{ui::Callback, Ui};
 use hex::{
     anyhow,
     ecs::{ev::Control, system_manager::System, ComponentManager, EntityManager, Ev, Scene},
@@ -59,7 +59,7 @@ impl System<'_> for UiManager {
         for e in em.entities.keys().cloned() {
             if let Some(u) = cm
                 .get::<Box<dyn Ui>>(e, em)
-                .and_then(|u| Some(u.ui(cm.get::<ScreenPos>(e, em)?, ev, &self.state, (em, cm))))
+                .and_then(|u| Some(u.ui(e, ev, &self.state, (em, cm))))
             {
                 let u = u?;
 
