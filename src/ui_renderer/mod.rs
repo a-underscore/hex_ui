@@ -11,7 +11,6 @@ use hex::{
         uniforms::Sampler,
         Depth, Display, DrawParameters, Surface,
     },
-    math::Mat3d,
 };
 
 pub struct UiRenderer<'a> {
@@ -80,7 +79,7 @@ impl<'a> System<'a> for UiRenderer<'a> {
                 for (s, t) in sprites {
                     let uniform = uniform! {
                         z: s.z,
-                        transform: (Mat3d::translation(t.position) * Mat3d::scale(t.scale)).0,
+                        transform: t.matrix().0,
                         camera_proj: c.proj().0,
                         color: s.color,
                         tex: Sampler(&*s.texture.buffer, s.texture.sampler_behaviour),
