@@ -52,14 +52,10 @@ impl Ui for Button {
                         -(state.mouse_position.1 / state.window_dimensions.1 as f32 * 2.0 - 1.0),
                     );
 
-                    let thing = mouse_position.x() > min.x()
+                    mouse_position.x() > min.x()
                         && mouse_position.x() < max.x()
                         && mouse_position.y() > min.y()
-                        && mouse_position.y() < max.y();
-
-                    println!("{thing}");
-
-                    thing
+                        && mouse_position.y() < max.y()
                 })
                 .unwrap_or_default()),
             _ => Ok(false),
