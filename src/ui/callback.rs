@@ -3,6 +3,7 @@ use hex::{
     id,
 };
 
+#[derive(Default)]
 pub struct Callback {
     checked: bool,
     value: bool,
