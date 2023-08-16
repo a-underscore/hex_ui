@@ -5,7 +5,7 @@ pub use state::State;
 use crate::{ui::Callback, Ui};
 use hex::{
     anyhow,
-    ecs::{ev::Control, system_manager::System, ComponentManager, EntityManager, Ev, Scene},
+    ecs::{ev::Control, system_manager::System, ComponentManager, EntityManager, Ev, Context},
     glium::glutin::{
         dpi::{PhysicalPosition, PhysicalSize},
         event::{Event, WindowEvent},
@@ -21,7 +21,7 @@ impl System<'_> for UiManager {
     fn update(
         &mut self,
         ev: &mut Ev,
-        _: &mut Scene,
+        _: &mut Context,
         (em, cm): (&mut EntityManager, &mut ComponentManager),
     ) -> anyhow::Result<()> {
         match ev {

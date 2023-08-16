@@ -3,7 +3,7 @@ use hex::{
     anyhow,
     assets::Shader,
     components::Sprite,
-    ecs::{system_manager::System, ComponentManager, EntityManager, Ev, Scene},
+    ecs::{system_manager::System, ComponentManager, EntityManager, Ev, Context},
     glium::{
         draw_parameters::{Blend, DepthTest},
         index::NoIndices,
@@ -47,7 +47,7 @@ impl<'a> System<'a> for UiRenderer<'a> {
     fn update(
         &mut self,
         ev: &mut Ev,
-        _: &mut Scene,
+        _: &mut Context,
         (em, cm): (&mut EntityManager, &mut ComponentManager),
     ) -> anyhow::Result<()> {
         if let Ev::Draw((_, target)) = ev {
