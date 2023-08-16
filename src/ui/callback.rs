@@ -12,7 +12,7 @@ pub struct Callback {
 
 impl Callback {
     pub fn set(&mut self, value: bool) {
-        if !self.checked {
+        if self.checked {
             self.checked = false;
 
             self.value = value;
