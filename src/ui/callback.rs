@@ -5,24 +5,21 @@ use hex::{
 
 #[derive(Default)]
 pub struct Callback {
-    checked: bool,
     value: bool,
     pub active: bool,
 }
 
 impl Callback {
-    pub fn set(&mut self, value: bool) {
-        if self.checked {
-            self.checked = false;
-
-            self.value = value;
-        }
+    pub fn set(&mut self) {
+        self.value = true;
     }
 
     pub fn check(&mut self) -> bool {
-        self.checked = true;
+        let value = self.value;
 
-        self.value
+        self.value = false;
+
+        value
     }
 }
 
