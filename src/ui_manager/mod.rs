@@ -63,10 +63,8 @@ impl System<'_> for UiManager {
             {
                 let u = u?;
 
-                if u {
-                    if let Some(c) = cm.get_mut::<Callback>(e, em) {
-                        c.set(u);
-                    }
+                if let Some(c) = cm.get_mut::<Callback>(e, em) {
+                    c.set(u);
                 }
             }
         }
