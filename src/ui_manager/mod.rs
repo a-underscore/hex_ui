@@ -17,7 +17,7 @@ pub struct UiManager {
     pub state: State,
 }
 
-impl System<'_> for UiManager {
+impl System for UiManager {
     fn update(
         &mut self,
         ev: &mut Ev,

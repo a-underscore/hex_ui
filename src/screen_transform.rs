@@ -1,6 +1,5 @@
 use hex::{
-    ecs::{component_manager::Component, Id},
-    id,
+    ecs::component_manager::Component,
     math::{Mat3d, Vec2d},
 };
 
@@ -29,8 +28,4 @@ impl ScreenTransform {
     }
 }
 
-impl Component for ScreenTransform {
-    fn id() -> Id {
-        id!()
-    }
-}
+impl Component for ScreenTransform {}

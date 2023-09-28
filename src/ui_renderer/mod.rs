@@ -14,13 +14,13 @@ use hex::{
     math::Ortho,
 };
 
-pub struct UiRenderer<'a> {
+pub struct UiRenderer {
     pub ortho: Ortho,
-    pub draw_parameters: DrawParameters<'a>,
+    pub draw_parameters: DrawParameters<'static>,
     pub shader: Shader,
 }
 
-impl<'a> UiRenderer<'a> {
+impl UiRenderer {
     pub fn new(display: &Display, ortho: Ortho) -> anyhow::Result<Self> {
         Ok(Self {
             ortho,
@@ -43,7 +43,7 @@ impl<'a> UiRenderer<'a> {
     }
 }
 
-impl<'a> System<'a> for UiRenderer<'a> {
+impl System for UiRenderer {
     fn update(
         &mut self,
         ev: &mut Ev,

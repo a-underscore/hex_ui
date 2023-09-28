@@ -1,7 +1,4 @@
-use hex::{
-    ecs::{component_manager::Component, Id},
-    id,
-};
+use hex::ecs::component_manager::Component;
 
 #[derive(Default)]
 pub struct Callback {
@@ -23,8 +20,4 @@ impl Callback {
     }
 }
 
-impl Component for Callback {
-    fn id() -> Id {
-        id!()
-    }
-}
+impl Component for Callback {}

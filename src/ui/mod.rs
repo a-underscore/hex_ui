@@ -10,7 +10,6 @@ use crate::ui_manager::State;
 use hex::{
     anyhow,
     ecs::{component_manager::Component, ComponentManager, EntityManager, Ev, Id},
-    id,
 };
 
 pub trait Ui {
@@ -23,8 +22,4 @@ pub trait Ui {
     ) -> anyhow::Result<bool>;
 }
 
-impl Component for Box<dyn Ui> {
-    fn id() -> Id {
-        id!()
-    }
-}
+impl Component for Box<dyn Ui> {}
