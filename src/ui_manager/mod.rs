@@ -56,7 +56,7 @@ impl System for UiManager {
             _ => {}
         }
 
-        for e in em.entities.keys().cloned() {
+        for e in em.entities() {
             if let Some(u) = cm
                 .get::<Box<dyn Ui>>(e, em)
                 .map(|u| u.ui(e, ev, &self.state, (em, cm)))

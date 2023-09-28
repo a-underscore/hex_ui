@@ -55,9 +55,7 @@ impl System for UiRenderer {
 
             let sprites = {
                 let mut sprites: Vec<_> = em
-                    .entities
-                    .keys()
-                    .cloned()
+                    .entities()
                     .filter_map(|e| {
                         Some((
                             cm.get::<Sprite>(e, em)

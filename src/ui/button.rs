@@ -39,9 +39,7 @@ impl Ui for Button {
                 }),
                 Some(transform),
             ) if self.active => Ok(em
-                .entities
-                .keys()
-                .cloned()
+                .entities()
                 .find_map(|e| cm.get::<Camera>(e, em).and_then(|c| c.active.then_some(c)))
                 .map(|c| {
                     let matrix = transform.matrix();
