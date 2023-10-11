@@ -58,13 +58,13 @@ impl System for UiManager {
 
         for e in em.entities() {
             if let Some(u) = cm
-                .get::<Box<dyn Ui>>(e, em)
+                .get::<Box<dyn Ui>>(e)
                 .map(|u| u.ui(e, ev, &self.state, (em, cm)))
             {
                 let u = u?;
 
                 if u {
-                    if let Some(c) = cm.get_mut::<Callback>(e, em) {
+                    if let Some(c) = cm.get_mut::<Callback>(e) {
                         c.set();
                     }
                 }

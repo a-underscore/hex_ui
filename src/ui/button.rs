@@ -22,7 +22,7 @@ impl Ui for Button {
         state: &State,
         (em, cm): (&EntityManager, &ComponentManager),
     ) -> anyhow::Result<bool> {
-        match (ev, cm.get::<ScreenTransform>(e, em)) {
+        match (ev, cm.get::<ScreenTransform>(e)) {
             (
                 Ev::Event(Control {
                     event:
@@ -40,7 +40,7 @@ impl Ui for Button {
                 Some(transform),
             ) if self.active => Ok(em
                 .entities()
-                .find_map(|e| cm.get::<Camera>(e, em).and_then(|c| c.active.then_some(c)))
+                .find_map(|e| cm.get::<Camera>(e).and_then(|c| c.active.then_some(c)))
                 .map(|c| {
                     let matrix = transform.matrix();
                     let ((max, _), _) = c.proj() * (matrix * ((self.dimensions / 2.0), 1.0), 1.0);

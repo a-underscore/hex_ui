@@ -58,9 +58,8 @@ impl System for UiRenderer {
                     .entities()
                     .filter_map(|e| {
                         Some((
-                            cm.get::<Sprite>(e, em)
-                                .and_then(|s| s.active.then_some(s))?,
-                            cm.get::<ScreenTransform>(e, em)
+                            cm.get::<Sprite>(e).and_then(|s| s.active.then_some(s))?,
+                            cm.get::<ScreenTransform>(e)
                                 .and_then(|t| t.active.then_some(t))?,
                         ))
                     })
